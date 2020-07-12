@@ -1,13 +1,84 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
 
+<div class="container">
     {% for item in items %}
-    <div> {{item.item_name}} </div>
+        <div class="col-lg-6 col-md-6 mb-6 products">
+            <div class="card h-100">
+                <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a id="item{{forloop.counter}}" href="#">{{item.item_name}}</a>
+                    </h4>
+                    <h5>{{item.item_price}}</h5>
+                    <p class="card-text">{{item.item_description}}</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <button class="addCartButton" id="button{{ forloop.counter }}" type="submit">Add to Cart</button>
+                    </small>
+                </div>
+            </div>
+        </div>
 
     {% endfor %}
+</div>
+    <script>
+        // Check if there is already a vlaue in local storage
+        if (!localStorage.getItem('shoppingCart')) {
+            
+            const emptyObject = {
+                items: []
+            };
+            
+            // If not, set the counter to 0 in local storage
+            console.log(emptyObject.name)
+            console.log(JSON.stringify(emptyObject))
+            localStorage.setItem('shoppingCart',JSON.stringify(emptyObject));
+        }else{
+            console.log("local storage not empty");
+            //localStorage.clear();
+        }
+    
+        function addItem(item) {
+            // Retrieve counter value from local storage
+            const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 
+            console.log(typeof(shoppingCart))
+            console.log(shoppingCart)
+            // update counter
+            //counter++;
+            
+            shoppingCart.items.push(item);
+            //document.querySelector('h1').innerHTML = counter;
+            
+            // Store counter in local storage
+            localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+            
+        }
+    
+    
+        document.addEventListener('DOMContentLoaded', function() {
+                              // Set heading to the current value inside local storage
+                            //document.querySelector('h1').innerHTML = localStorage.getItem('counter');
+                              //document.querySelector('button').onclick = count;
+                                  
+                                  console.log((localStorage.getItem('shoppingCart')));
+                                  
+                                  const items = document.querySelectorAll(".addCartButton");
+                                  
+                                  items.forEach(button => {
+                                                button.onclick = () => {
+                                                console.log("before ")
+                                                console.log(localStorage.getItem('shoppingCart'));
+                                                console.log(button)
+                                                addItem(button.id);
+                                                console.log("after " )
+                                                console.log(localStorage.getItem('shoppingCart'));
 
-    TODO
+                                                    };
+                                                });
+                              });
+        </script>
 {% endblock %}

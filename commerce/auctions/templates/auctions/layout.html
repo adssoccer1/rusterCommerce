@@ -3,38 +3,110 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="ecommerce website for Rüster LLC">
+        <meta name="author" content="Aidan Sinclair">
+        
         <title>{% block title %}Auctions{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+            
+        <!-- Bootstrap core CSS -->
+        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+                
+        <!-- Custom styles for this template -->
+        <link href="{% static 'auctions/shop-homepage.css' %}" rel="stylesheet">
+        
+        <!-- Get Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Bungee+Hairline&family=Bungee+Outline&display=swap" rel="stylesheet">
+
+
+            
+        <style>
+            body{
+                padding: 5% 20%;
+            }
+        
+            .banner {
+                width: 100%;
+                margin: 15px;
+            }
+        
+        .nav2{
+            position:relative;
+            right: -65%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        body{
+            font-family: 'Bungee Hairline', cursive;
+        }
+        .container{
+            display: flex;
+            flex-wrap: wrap;
+            text-align:center;
+            padding: 10px;
+        }
+        .products{
+            padding: 5px;
+        }
+       
+       .rustersign{
+         color: inherit;
+         text-decoration: none;
+       }
+       
+        
+        </style>
+
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
+        
+        <div class="banner">
+            
+            <h1 style="font-size:400%;"> <a href="{% url 'index' %}" class="rustersign"> Rüster </a> </h1>
+            <div class="nav2">
+            <ul class="nav">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <span class="nav-link">Welcome <strong>{{ user.username }}!</strong> </span>.
+                <li>
+                {% else %}
+                <li class="nav-item">
+                    <span class="nav-link">Welcome!</span>
+                </li>
+                {% endif %}
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Shop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cart' %}">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                {% endif %}
+            </ul>
+            </div>
         </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
-        <hr>
-        {% block body %}
-        {% endblock %}
+        
+        
+            {% block body %}
+            {% endblock %}
+
     </body>
 </html>

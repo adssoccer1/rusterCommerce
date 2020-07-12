@@ -72,3 +72,11 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+
+def about(request):
+
+    return render(request, "auctions/about.html")
+
+def cart(request):
+    return render(request, "auctions/cart.html")

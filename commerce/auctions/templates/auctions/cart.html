@@ -1,0 +1,61 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+    <div id="itemsParent">
+        
+    </div>
+
+
+
+    <button id="clearCart"> Clear Cart </button>
+
+
+
+<script>
+
+    function listItems(){
+        if(localStorage.getItem('shoppingCart')){
+            const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+            console.log(shoppingCart.items);
+            return true;
+        }
+        console.log("cart empty");
+        return false;
+    }
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+          document.querySelector("#clearCart").onclick = () => {
+          listItems();//delete later
+          localStorage.clear();
+          listItems(); //delete later
+
+          }
+                              
+                              const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+                              
+                              if(shoppingCart){
+                            
+                                const items = shoppingCart.items;
+                              items.forEach(item => {
+                                            document.getElementById('itemsParent').innerHTML += `<div itemsChild> ${item} </div>`;
+
+                                            })
+                                console.log(items);
+                              
+                              }
+                                        
+                                                                                   
+                                
+    });
+
+
+
+</script>
+{% endblock %}
