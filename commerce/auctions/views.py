@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Item
 
 
 def index(request):
@@ -12,7 +12,10 @@ def index(request):
     print(request)
     #print("now the request has ended")
 
-    return render(request, "auctions/index.html")
+    items = Item.objects.all()
+    return render(request, "auctions/index.html", {
+                  "items" : items
+                  })
 
 
 def login_view(request):
@@ -64,7 +67,7 @@ def register(request):
                 "message": "Username already taken."
             })
 
-"""To log a user in, from a view, use login(). It takes an HttpRequest object and a User object. login() saves the user’s ID in the session, using Django’s session framework."""
+        """To log a user in, from a view, use login(). It takes an HttpRequest object and a User object. login() saves the user’s ID in the session, using Django’s session framework."""
         login(request, user) # this is how you attach a user to the current session
         return HttpResponseRedirect(reverse("index"))
     else:

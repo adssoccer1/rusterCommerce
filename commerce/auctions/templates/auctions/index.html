@@ -3,5 +3,11 @@
 {% block body %}
     <h2>Active Listings</h2>
 
+    {% for item in items %}
+    <div> {{item.item_name}} </div>
+
+    {% endfor %}
+
+
     TODO
 {% endblock %}
