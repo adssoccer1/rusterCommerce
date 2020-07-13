@@ -26,6 +26,9 @@
     }
 
 
+    function removeCartEntryHtml(){
+        document.getElementById('itemsParent').innerHTML = `<div> </div>`;
+    }
 
 
 
@@ -34,6 +37,8 @@
           document.querySelector("#clearCart").onclick = () => {
           listItems();//delete later
           localStorage.clear();
+        updateCartNavLink();
+                              removeCartEntryHtml();
           listItems(); //delete later
 
           }
@@ -44,11 +49,13 @@
                             
                                 const items = shoppingCart.items;
                               items.forEach(item => {
-                                            document.getElementById('itemsParent').innerHTML += `<div itemsChild> ${item} </div>`;
+                                            document.getElementById('itemsParent').innerHTML += `<div itemsChild> <span class="itemName">${item} </span>  </div>`;
 
                                             })
                                 console.log(items);
                               
+                              }else{
+                              document.getElementById('itemsParent').innerHTML = `(0) items in cart :/`;
                               }
                                         
                                                                                    

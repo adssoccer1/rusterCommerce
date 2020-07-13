@@ -86,7 +86,7 @@
                     <a class="nav-link" href="{% url 'index' %}">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cart' %}">Cart</a>
+                    <a id="cartLink" class="nav-link" href="{% url 'cart' %}">Cart</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -107,6 +107,95 @@
         
             {% block body %}
             {% endblock %}
+            
+            <script>
+                
+                /*
+                 * Set the localStorage.
+                 * Sets 'shoppingCart' to json object {items : []}
+                 * Stores in JSON because localStorage only stores strings.
+                 */
+            if (!localStorage.getItem('shoppingCart')) {
+                const emptyObject = {
+                    items: []
+                };
+                // If not, set the counter to 0 in local storage
+                console.log(emptyObject.name)
+                console.log(JSON.stringify(emptyObject))
+                localStorage.setItem('shoppingCart',JSON.stringify(emptyObject));
+            }else{
+                console.log("local storage not empty");
+                //localStorage.clear();
+            }
+            
+            if(!localStorage.getItem('mapOfButtonNamesToItems')){
+                //TODO
+                //implement function that will take the button names and map them to the product names.
+                //impelement this such that this map will update automatically if you add an item from the admin.
+            }
+            
+            
+            function addItem(item) {
+                // Retrieve counter value from local storage
+                const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+                
+                console.log(typeof(shoppingCart))
+                console.log(shoppingCart)
+                // update counter
+                //counter++;
+                
+                shoppingCart.items.push(item);
+                //document.querySelector('h1').innerHTML = counter;
+                
+                // Store counter in local storage
+                localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+                
+            }
+            
+            /*
+             * functionality to get the number of items to appear next to the cart nav link.
+             */
+            function updateCartNavLink(){
+                const cartLink = document.querySelector("#cartLink");
+                const shoppingCart = localStorage.getItem('shoppingCart');
+                if (shoppingCart == null){
+                    cartLink.innerHTML = "Cart (0)";
+                }else{
+                    const numItemsInShoppingCart = JSON.parse(shoppingCart).items.length;
+                    cartLink.innerHTML = `Cart (${numItemsInShoppingCart})`;
+                }
+            }
+            
+            
+            document.addEventListener('DOMContentLoaded', function() {
+                                      // Set heading to the current value inside local storage
+                                      //document.querySelector('h1').innerHTML = localStorage.getItem('counter');
+                                      //document.querySelector('button').onclick = count;
+                                      
+                                      //
+                                      updateCartNavLink();
+                                      
+                                      console.log((localStorage.getItem('shoppingCart')));
+                                      
+                                      const items = document.querySelectorAll(".addCartButton");
+                                      
+                                      items.forEach(button => {
+                                                    button.onclick = () => {
+                                                    console.log("before ")
+                                                    console.log(localStorage.getItem('shoppingCart'));
+                                                    addItem(button.id);
+                                                    updateCartNavLink();
+                                                    console.log("after " )
+                                                    console.log(localStorage.getItem('shoppingCart'));
+                                                    
+                                                    };
+                                                    });
+                                      });
+                                      
+                                      
+                                    
+
+            </script>
 
     </body>
 </html>
