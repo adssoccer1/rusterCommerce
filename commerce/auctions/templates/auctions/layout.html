@@ -3,104 +3,60 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        
-        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="ecommerce website for Rüster LLC">
         <meta name="author" content="Aidan Sinclair">
         
-        <title>{% block title %}Auctions{% endblock %}</title>
+        <title>{% block title %}Rüster{% endblock %}</title>
+
+        <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
-            
-        <!-- Bootstrap core CSS -->
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-                
-        <!-- Custom styles for this template -->
-        <link href="{% static 'auctions/shop-homepage.css' %}" rel="stylesheet">
-        
         <!-- Get Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Bungee+Hairline&family=Bungee+Outline&display=swap" rel="stylesheet">
 
 
-            
-        <style>
-            body{
-                padding: 5% 20%;
-            }
-        
-            .banner {
-                width: 100%;
-                margin: 15px;
-            }
-        
-        .nav2{
-            position:relative;
-            right: -65%;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        body{
-            font-family: 'Bungee Hairline', cursive;
-        }
-        .container{
-            display: flex;
-            flex-wrap: wrap;
-            text-align:center;
-            padding: 10px;
-        }
-        .products{
-            padding: 5px;
-        }
-       
-       .rustersign{
-         color: inherit;
-         text-decoration: none;
-       }
-       
-        
-        </style>
-
+        <!-- Custom styles for this template -->
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
+
     <body>
         
         <div class="banner">
-            
             <h1 style="font-size:400%;"> <a href="{% url 'index' %}" class="rustersign"> Rüster </a> </h1>
             <div class="nav2">
-            <ul class="nav">
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <span class="nav-link">Welcome <strong>{{ user.username }}!</strong> </span>.
-                <li>
-                {% else %}
-                <li class="nav-item">
-                    <span class="nav-link">Welcome!</span>
-                </li>
-                {% endif %}
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Shop</a>
-                </li>
-                <li class="nav-item">
-                    <a id="cartLink" class="nav-link" href="{% url 'cart' %}">Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about' %}">About</a>
-                </li>
-                {% if user.is_authenticated %}
+                <ul class="nav">
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                {% else %}
+                        <span class="nav-link">Welcome <strong>{{ user.username }}!</strong> </span>.
+                    <li>
+                    {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        <span class="nav-link">Welcome!</span>
                     </li>
-                {% endif %}
-            </ul>
+                    {% endif %}
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="cartLink" class="nav-link" href="{% url 'cart' %}">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
         
@@ -108,13 +64,17 @@
             {% block body %}
             {% endblock %}
             
-            <script>
+            <div class="nav-item footer">
+                <a id="cartLink2" class="nav-link" href="{% url 'cart' %}">Check Out</a>
+            <div>
+            
+        <script>
                 
-                /*
-                 * Set the localStorage.
-                 * Sets 'shoppingCart' to json object {items : []}
-                 * Stores in JSON because localStorage only stores strings.
-                 */
+            /*
+            * Set the localStorage.
+            * Sets 'shoppingCart' to json object {items : []}
+            * Stores in JSON because localStorage only stores strings.
+            */
             if (!localStorage.getItem('shoppingCart')) {
                 const emptyObject = {
                     items: []
@@ -124,77 +84,66 @@
                 console.log(JSON.stringify(emptyObject))
                 localStorage.setItem('shoppingCart',JSON.stringify(emptyObject));
             }else{
-                console.log("local storage not empty");
+                console.log("local storage contains shopping cart");
                 //localStorage.clear();
             }
             
+            /* do i need this ? */
             if(!localStorage.getItem('mapOfButtonNamesToItems')){
                 //TODO
                 //implement function that will take the button names and map them to the product names.
                 //impelement this such that this map will update automatically if you add an item from the admin.
             }
             
-            
+            /*
+            * adds a new item to the shopping cart in local storage. 
+            */
             function addItem(item) {
-                // Retrieve counter value from local storage
+                //shopping cart should look like:  {items : []}
                 const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-                
-                console.log(typeof(shoppingCart))
-                console.log(shoppingCart)
-                // update counter
-                //counter++;
-                
+                //console.log(shoppingCart)
                 shoppingCart.items.push(item);
-                //document.querySelector('h1').innerHTML = counter;
-                
-                // Store counter in local storage
+                // Store in local storage
                 localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
-                
             }
             
             /*
-             * functionality to get the number of items to appear next to the cart nav link.
+             * functionality to get the number of items to appear next to the cart nav links at top and 
+             * bottom of page.
              */
             function updateCartNavLink(){
                 const cartLink = document.querySelector("#cartLink");
+                const cartLink2 = document.querySelector("#cartLink2");
                 const shoppingCart = localStorage.getItem('shoppingCart');
                 if (shoppingCart == null){
                     cartLink.innerHTML = "Cart (0)";
+                    cartLink2.innerHTML = "Check Out (0)";
                 }else{
                     const numItemsInShoppingCart = JSON.parse(shoppingCart).items.length;
                     cartLink.innerHTML = `Cart (${numItemsInShoppingCart})`;
+                    cartLink2.innerHTML = `Check Out (${numItemsInShoppingCart})`;
                 }
             }
             
-            
+            //on page load ... 
             document.addEventListener('DOMContentLoaded', function() {
-                                      // Set heading to the current value inside local storage
-                                      //document.querySelector('h1').innerHTML = localStorage.getItem('counter');
-                                      //document.querySelector('button').onclick = count;
-                                      
-                                      //
-                                      updateCartNavLink();
-                                      
-                                      console.log((localStorage.getItem('shoppingCart')));
-                                      
-                                      const items = document.querySelectorAll(".addCartButton");
-                                      
-                                      items.forEach(button => {
-                                                    button.onclick = () => {
-                                                    console.log("before ")
-                                                    console.log(localStorage.getItem('shoppingCart'));
-                                                    addItem(button.id);
-                                                    updateCartNavLink();
-                                                    console.log("after " )
-                                                    console.log(localStorage.getItem('shoppingCart'));
-                                                    
-                                                    };
-                                                    });
-                                      });
-                                      
-                                      
-                                    
+                
+                updateCartNavLink();
+                
+                             
+                //add onclick functionality to the "add to cart" buttons.                      
+                const items = document.querySelectorAll(".addCartButton");                      
+                items.forEach(button => {
+                    button.onclick = () => {
+                            addItem(button.id);
+                            updateCartNavLink();
+                    };
+                });
+            });
 
+
+
+            
             </script>
 
     </body>

@@ -9,7 +9,7 @@
                 <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                 <div class="card-body">
                     <h4 class="card-title">
-                        <a id="item{{forloop.counter}}" href="#">{{item.item_name}}</a>
+                        <a class="product" id="item{{forloop.counter}}" href="#">{{item.item_name}}</a>
                     </h4>
                     <h5>{{item.item_price}}</h5>
                     <p class="card-text">{{item.item_description}}</p>
@@ -24,4 +24,44 @@
 
     {% endfor %}
 </div>
+
+<script>
+    //gets all the product anchor tags from which we can access the item.name. 
+    document.addEventListener('DOMContentLoaded', function() {
+        const arrayOfItems = document.querySelectorAll(".product");
+                    console.log("product: ", arrayOfItems);
+                    if(arrayOfItems.length === 0){
+                        console.log("Please visit the shop page before returning to the Cart.");
+                    }
+
+                    //build map of button names to product names to store in local storage so 
+                    //we can build the shopping cart table later. 
+                    const mapOfButtonNamesToItems = localStorage.getItem('mapOfButtonNamesToItems');
+                    if(!mapOfButtonNamesToItems || mapOfButtonNamesToItems.map.length === 0){
+                        console.log("there is no map in LS");
+                        let tempObject = { map : []}; //will store an array of objects to be stringified for local storage.
+                        let counter = 1;
+                        //go through each product/item on the page
+                        arrayOfItems.forEach( item => {
+                            let str = "button" + counter; //so we can access button1, button2, etc.
+                            counter++;
+                            let myObj = new Object();
+                            myObj[str] = item.innerHTML; // set the button name : product name
+                            tempObject.map.push(myObj);
+                        });
+                        //check the map object of objects is written correctly  
+                        console.log("tempObjet: " , JSON.stringify(tempObject));
+                        localStorage.setItem('mapOfButtonToProductName', JSON.stringify(tempObject));
+                    }else{
+                        console.log("there is a map in LS");
+                    }
+                    //test that the map is stored  correctly in local storage. 
+                    //console.log("test if map is stored correctly",JSON.parse(localStorage.getItem('mapOfButtonToProductName')).map[1].button2);
+    });              
+</script>
+
+
+
+
+    
     {% endblock %}

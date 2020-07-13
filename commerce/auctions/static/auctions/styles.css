@@ -2,3 +2,47 @@ body {
     padding: 10px;
 }
 
+body{
+    padding: 5% 20%;
+}
+
+.banner {
+    width: 100%;
+    margin: 15px;
+}
+
+.nav2{
+    position:relative;
+    right: -65%;
+    display: flex;
+    flex-wrap: wrap;
+}
+body{
+    font-family: 'Bungee Hairline', cursive;
+}
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    text-align:center;
+    padding: 10px;
+}
+
+
+.products{
+    padding: 5px;
+}
+
+.rustersign{
+    color: inherit;
+    text-decoration: none;
+}
+
+.footer {
+    text-align: center;
+}
+
+td{
+    border: dotted;
+    margin: 50px;
+    padding: 20px;
+}

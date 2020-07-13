@@ -1,20 +1,34 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
-
     <div id="itemsParent">
         
+        
     </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Item</th>
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          
 
+        </tbody>
+      </table>
 
-
-    <button id="clearCart"> Clear Cart </button>
-
-
+    <div class="container">
+        <button id="clearCart"> Clear Cart </button>
+    </div>
 
 <script>
 
+    /*
+     * lists the current shopping cart items in the console.
+     */
     function listItems(){
         if(localStorage.getItem('shoppingCart')){
             const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
@@ -26,43 +40,102 @@
     }
 
 
+    /*
+     *Removes the html of every item in the current cart.
+     */
     function removeCartEntryHtml(){
-        document.getElementById('itemsParent').innerHTML = `<div> </div>`;
+        document.getElementById('tableBody').innerHTML = `(0) items in cart :/`;
     }
 
-
-
+    //when the page loads....
     document.addEventListener('DOMContentLoaded', function() {
+        
+        //get price of
 
-          document.querySelector("#clearCart").onclick = () => {
-          listItems();//delete later
-          localStorage.clear();
-        updateCartNavLink();
-                              removeCartEntryHtml();
-          listItems(); //delete later
-
+        //set the onclick eventListener on the clear cart button. 
+        document.querySelector("#clearCart").onclick = () => {
+            listItems();//delete later - lists the current shopping cart items in the console. 
+            localStorage.clear(); //clear local storage
+            updateCartNavLink(); //reset the number of items next to the cart links to 0
+            removeCartEntryHtml();//remove delete the shopping cart table
           }
-                              
-                              const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-                              
-                              if(shoppingCart){
-                            
-                                const items = shoppingCart.items;
-                              items.forEach(item => {
-                                            document.getElementById('itemsParent').innerHTML += `<div itemsChild> <span class="itemName">${item} </span>  </div>`;
 
-                                            })
-                                console.log(items);
-                              
-                              }else{
-                              document.getElementById('itemsParent').innerHTML = `(0) items in cart :/`;
-                              }
-                                        
+
+        /*
+         *Build the cart page depending on if there are items in the shopping cart or not.                
+         */
+        const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));  
+        //if the shopping cart is undefined or there are no items in the shopping cart
+        if(!shoppingCart || shoppingCart.items.length ==0 ){
+            document.getElementById('tableBody').innerHTML = "(0) items in cart :/";
+        }
+        /// else there are items in the cart so
+        else{
+            const items = shoppingCart.items; //get the array of items (shoppingCart is JSON object {items: []})
+            //get the map of button names to product names from local storage.
+            //map will equal: [{button1 : productName}, {button2 : productName}] 
+            const map = JSON.parse(localStorage.getItem('mapOfButtonToProductName'));
+            console.log("testing map : ", map);
+
+
+            //go through each item and find its correct product name in the map
+            items.forEach(item => {
+                
+                //get the item name through the map
+                let productName;
+
+                //very inefficient and gross - but go through all the objects in map and check if the item
+                //is a valid key to the current object. If it is then this key (which is the button) matches
+                //to this product name. So break. 
+                for(let i = 0; i < map.map.length; i++){
+                    //console.log( map.map[i][item]);
+                
+                    if(map.map[i][item] != null){
+                        console.log("here");
+                        productName = map.map[i][item];
+                        break;
+                      }
+                }
+                console.log("productName", productName);
+                //console.log("product name: ", productName);
+
+                //insert the product name into the DOM. 
+                document.getElementById('tableBody').innerHTML += 
+                    `
+                        <tr class="shoppingCartRow">
+                            <th scope="row">1</th>
+                            <td>${productName}</td>
+                            <td></td>
+                            <td><button class="removeItemCartButton" type="submit">Remove</button></td>
+                        </tr>`;
+            });
+          }
+
+        
+        /* adding functionality to the remove button for each element. */
+        function addOnClickToRemoveButtons(){
+            const shoppingCartRow = document.querySelectorAll(".shoppingCartRow");
+            console.log(shoppingCartRow);
+            shoppingCartRow.forEach( row => {
+                
+                const button = row.getElementsByTagName('button');
+                console.log(button);
+                button[0].onclick = () => {
+                    console.log("remove button pressed");
+                    //remove html
+                    row.innerHTML = ``; 
+
+                    //1) go to the shopping cart in local storage and remove the row by the row's item's name. 
+                    
+                    //2) updateCartNavLink();
+
+                };
+            });
+        }
+
+        addOnClickToRemoveButtons();
                                                                                    
                                 
     });
-
-
-
 </script>
 {% endblock %}
