@@ -120,6 +120,7 @@
                     cartLink2.innerHTML = "Check Out (0)";
                 }else{
                     const numItemsInShoppingCart = JSON.parse(shoppingCart).items.length;
+                    console.log("length of shopping cart", numItemsInShoppingCart);
                     cartLink.innerHTML = `Cart (${numItemsInShoppingCart})`;
                     cartLink2.innerHTML = `Check Out (${numItemsInShoppingCart})`;
                 }

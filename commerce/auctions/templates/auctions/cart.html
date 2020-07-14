@@ -79,6 +79,7 @@
 
 
             //go through each item and find its correct product name in the map
+            let itemCounter = 0; 
             items.forEach(item => {
                 
                 //get the item name through the map
@@ -103,31 +104,56 @@
                 document.getElementById('tableBody').innerHTML += 
                     `
                         <tr class="shoppingCartRow">
-                            <th scope="row">1</th>
+                            <th id="row${itemCounter}"scope="row">${itemCounter}</th>
                             <td>${productName}</td>
                             <td></td>
                             <td><button class="removeItemCartButton" type="submit">Remove</button></td>
                         </tr>`;
+                itemCounter++; 
             });
           }
 
         
         /* adding functionality to the remove button for each element. */
         function addOnClickToRemoveButtons(){
-            const shoppingCartRow = document.querySelectorAll(".shoppingCartRow");
-            console.log(shoppingCartRow);
-            shoppingCartRow.forEach( row => {
+            let shoppingCartRows = document.querySelectorAll(".shoppingCartRow");
+            console.log(shoppingCartRows);
+            shoppingCartRows.forEach( row => {
                 
                 const button = row.getElementsByTagName('button');
-                console.log(button);
+                console.log("row 1 " , row);
+                console.log("button ", button);
                 button[0].onclick = () => {
-                    console.log("remove button pressed");
-                    //remove html
-                    row.innerHTML = ``; 
+                    
+                    console.log("row 2 ", row );
 
                     //1) go to the shopping cart in local storage and remove the row by the row's item's name. 
+                    const rowNumber = row.getElementsByTagName('th')[0].innerText;
+                    console.log("remove button pressed on row ", rowNumber);
+
+                    const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+                    shoppingCart.items.splice( rowNumber , 1);
+                    console.log("shopping cart items", shoppingCart.items);
+                    localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+
+
+                    //remove html
+                    row.remove();
+
+                    //go through all remaining table rows and update their row numbers
+                    //this will allow us to correctly index them from the shopping cart list. 
+                    shoppingCartRows = document.querySelectorAll(".shoppingCartRow");
+                    let rowCounter = 0; 
+                    shoppingCartRows.forEach(shoppingCartRow => {
+                        console.log("shoppingCartRow ", shoppingCartRow);
+                        //update the rows id and its inner text 
+                        shoppingCartRow.getElementsByTagName('th')[0].id = "row" + rowCounter;
+                        shoppingCartRow.getElementsByTagName('th')[0].innerText = rowCounter;
+                        rowCounter++; 
+                    });
                     
-                    //2) updateCartNavLink();
+                    //update the cart link's counts. 
+                    updateCartNavLink();
 
                 };
             });
