@@ -9,9 +9,9 @@
                 <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                 <div class="card-body">
                     <h4 class="card-title">
-                        <a class="product" id="item{{forloop.counter}}" href="#">{{item.item_name}}</a>
+                        <a class="product" data-price={{item.item_price}} id="item{{forloop.counter}}" href="#">{{item.item_name}}</a>
                     </h4>
-                    <h5>{{item.item_price}}</h5>
+                    <h5 >{{item.item_price}}</h5>
                     <p class="card-text">{{item.item_description}}</p>
                 </div>
                 <div class="card-footer">
@@ -28,8 +28,9 @@
 <script>
     //gets all the product anchor tags from which we can access the item.name. 
     document.addEventListener('DOMContentLoaded', function() {
+        
         const arrayOfItems = document.querySelectorAll(".product");
-                    console.log("product: ", arrayOfItems);
+        console.log("product: ", arrayOfItems);
                     if(arrayOfItems.length === 0){
                         console.log("Please visit the shop page before returning to the Cart.");
                     }
@@ -44,10 +45,12 @@
                         //go through each product/item on the page
                         arrayOfItems.forEach( item => {
                             let str = "button" + counter; //so we can access button1, button2, etc.
-                            counter++;
                             let myObj = new Object();
                             myObj[str] = item.innerHTML; // set the button name : product name
+                            myObj['price'] = item.dataset.price; //set an attibute for the price as well because this link also has data-price
                             tempObject.map.push(myObj);
+                            counter++;
+
                         });
                         //check the map object of objects is written correctly  
                         console.log("tempObjet: " , JSON.stringify(tempObject));

@@ -1,10 +1,8 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <div id="itemsParent">
-        
-        
-    </div>
+
+<div class="shoppingCartContainter">
     <table class="table">
         <thead>
           <tr>
@@ -16,13 +14,22 @@
         </thead>
         <tbody id="tableBody">
           
-
         </tbody>
+        <tfoot>
+            <td></td>
+            <td></td>
+            <td><strong>Total: <span id="totalPrice">0</span></strong></td>
+            <td></td>
+        </tfoot>
       </table>
 
     <div class="container">
         <button id="clearCart"> Clear Cart </button>
     </div>
+</div>
+<div sytle="display:none;" class="emptyCartMessage">
+    <p>(0) items in cart :/</p>
+</div>
 
 <script>
 
@@ -40,11 +47,38 @@
     }
 
 
+
     /*
      *Removes the html of every item in the current cart.
      */
     function removeCartEntryHtml(){
         document.getElementById('tableBody').innerHTML = `(0) items in cart :/`;
+    }
+
+    /*
+    *sets the empty cart message if no items in cart and hides the table. 
+    * hides to empty cart message if not empty and displayer the table. 
+    */
+    function testDisplayEmptyCartMessage(){
+        const numOfItemsInCart = JSON.parse(localStorage.getItem('shoppingCart'));
+        if(numOfItemsInCart == null || numOfItemsInCart.items.length === 0){
+            document.querySelector(".shoppingCartContainter").style.display = "none"; 
+            document.querySelector(".emptyCartMessage").style.display = "block";
+        }else{
+            document.querySelector(".shoppingCartContainter").style.display = "block"; 
+            document.querySelector(".emptyCartMessage").style.display = "none";
+        }
+    }
+
+    function updateTotalPrice(){
+
+        const prices = document.querySelectorAll(".itemPriceTableData"); 
+        let totalPrice = 0; 
+        prices.forEach(price =>{
+            totalPrice += parseInt(price.innerText);
+        });
+
+        document.getElementById("totalPrice").innerText = totalPrice; 
     }
 
     //when the page loads....
@@ -58,6 +92,7 @@
             localStorage.clear(); //clear local storage
             updateCartNavLink(); //reset the number of items next to the cart links to 0
             removeCartEntryHtml();//remove delete the shopping cart table
+            testDisplayEmptyCartMessage(); 
           }
 
 
@@ -67,36 +102,46 @@
         const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));  
         //if the shopping cart is undefined or there are no items in the shopping cart
         if(!shoppingCart || shoppingCart.items.length ==0 ){
-            document.getElementById('tableBody').innerHTML = "(0) items in cart :/";
+            document.querySelector(".shoppingCartContainter").style.display = "none"; 
+            document.querySelector(".emptyCartMessage").style.display = "block";
         }
         /// else there are items in the cart so
         else{
+            document.querySelector(".shoppingCartContainter").style.display = "block"; 
+            document.querySelector(".emptyCartMessage").style.display = "none";
+
             const items = shoppingCart.items; //get the array of items (shoppingCart is JSON object {items: []})
+
             //get the map of button names to product names from local storage.
             //map will equal: [{button1 : productName}, {button2 : productName}] 
             const map = JSON.parse(localStorage.getItem('mapOfButtonToProductName'));
-            console.log("testing map : ", map);
+            //console.log("testing map : ", map);
 
 
             //go through each item and find its correct product name in the map
             let itemCounter = 0; 
+            let totalPrice = parseInt(document.getElementById("totalPrice").innerText, 10); 
+            console.log("totalPrice", totalPrice);
             items.forEach(item => {
                 
                 //get the item name through the map
                 let productName;
+                let productPrice; 
 
                 //very inefficient and gross - but go through all the objects in map and check if the item
                 //is a valid key to the current object. If it is then this key (which is the button) matches
                 //to this product name. So break. 
                 for(let i = 0; i < map.map.length; i++){
-                    //console.log( map.map[i][item]);
+                    console.log("for loop", map.map[i][item]);
                 
                     if(map.map[i][item] != null){
                         console.log("here");
                         productName = map.map[i][item];
+                        productPrice = map.map[i]["price"];
                         break;
                       }
                 }
+                totalPrice += parseInt(productPrice); 
                 console.log("productName", productName);
                 //console.log("product name: ", productName);
 
@@ -106,27 +151,25 @@
                         <tr class="shoppingCartRow">
                             <th id="row${itemCounter}"scope="row">${itemCounter}</th>
                             <td>${productName}</td>
-                            <td></td>
+                            <td class="itemPriceTableData">${productPrice}</td>
                             <td><button class="removeItemCartButton" type="submit">Remove</button></td>
                         </tr>`;
                 itemCounter++; 
             });
+            document.getElementById("totalPrice").innerText = totalPrice;
           }
 
         
         /* adding functionality to the remove button for each element. */
         function addOnClickToRemoveButtons(){
             let shoppingCartRows = document.querySelectorAll(".shoppingCartRow");
-            console.log(shoppingCartRows);
+            //console.log(shoppingCartRows);
             shoppingCartRows.forEach( row => {
                 
                 const button = row.getElementsByTagName('button');
-                console.log("row 1 " , row);
-                console.log("button ", button);
+                //console.log("button ", button);
                 button[0].onclick = () => {
                     
-                    console.log("row 2 ", row );
-
                     //1) go to the shopping cart in local storage and remove the row by the row's item's name. 
                     const rowNumber = row.getElementsByTagName('th')[0].innerText;
                     console.log("remove button pressed on row ", rowNumber);
@@ -140,6 +183,9 @@
                     //remove html
                     row.remove();
 
+                    //update the total price. 
+                    updateTotalPrice(); 
+
                     //go through all remaining table rows and update their row numbers
                     //this will allow us to correctly index them from the shopping cart list. 
                     shoppingCartRows = document.querySelectorAll(".shoppingCartRow");
@@ -151,9 +197,11 @@
                         shoppingCartRow.getElementsByTagName('th')[0].innerText = rowCounter;
                         rowCounter++; 
                     });
-                    
+
                     //update the cart link's counts. 
                     updateCartNavLink();
+
+                    testDisplayEmptyCartMessage(); 
 
                 };
             });
