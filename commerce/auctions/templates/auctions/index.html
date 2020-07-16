@@ -23,9 +23,14 @@
         </div>
 
     {% endfor %}
+    <div class="nav-item footer">
+        <a id="cartLink2" class="nav-link" href="{% url 'cart' %}">Check Out</a>
+    <div>
 </div>
 
 <script>
+
+    
     //gets all the product anchor tags from which we can access the item.name. 
     document.addEventListener('DOMContentLoaded', function() {
         

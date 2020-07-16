@@ -27,6 +27,9 @@
             margin: 50px;
             padding: 20px;
         }
+        .footer{
+            margin : auto;
+        }
         </style>
     </head>
 
@@ -72,9 +75,7 @@
             {% block body %}
             {% endblock %}
             
-            <div class="nav-item footer">
-                <a id="cartLink2" class="nav-link" href="{% url 'cart' %}">Check Out</a>
-            <div>
+            
             
         <script>
                 
@@ -115,25 +116,25 @@
                 localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
             }
             
-            /*
-             * functionality to get the number of items to appear next to the cart nav links at top and 
-             * bottom of page.
-             */
+            
+                /*
+                * functionality to get the number of items to appear next to the cart nav links at top and 
+                * bottom of page.
+                */
             function updateCartNavLink(){
                 const cartLink = document.querySelector("#cartLink");
                 const cartLink2 = document.querySelector("#cartLink2");
                 const shoppingCart = localStorage.getItem('shoppingCart');
                 if (shoppingCart == null){
                     cartLink.innerHTML = "Cart (0)";
-                    cartLink2.innerHTML = "Check Out (0)";
+                    if(cartLink2 != null) cartLink2.innerHTML = "Check Out (0)";
                 }else{
                     const numItemsInShoppingCart = JSON.parse(shoppingCart).items.length;
                     console.log("length of shopping cart", numItemsInShoppingCart);
                     cartLink.innerHTML = `Cart (${numItemsInShoppingCart})`;
-                    cartLink2.innerHTML = `Check Out (${numItemsInShoppingCart})`;
+                    if(cartLink2 != null) cartLink2.innerHTML = `Check Out (${numItemsInShoppingCart})`;
                 }
             }
-            
             //on page load ... 
             document.addEventListener('DOMContentLoaded', function() {
                 
